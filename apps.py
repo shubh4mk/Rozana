@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.sidebar.image("https://i.imgur.com/5cL9P3F.png", width=180)
+st.sidebar.image("https://firesideventures.com/cdn/shop/files/Logo_of_Rozana_2048x.png?v=1732534274", width=180)
 st.sidebar.title("📊 Rozana Automation")
 selected_tab = st.sidebar.radio("Select Task", [
     "Order Summary Cleaner",
