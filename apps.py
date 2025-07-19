@@ -9,20 +9,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 🔁 File loader that supports CSV and Excel
-def load_file(uploaded_file):
-    if uploaded_file.name.endswith('.csv'):
-        return pd.read_csv(uploaded_file)
-    elif uploaded_file.name.endswith(('.xlsx', '.xls')):
-        return pd.read_excel(uploaded_file)
-    else:
-        return None
-
-# 📤 CSV export helper
-def convert_df(df):
-    return df.to_csv(index=False).encode('utf-8')
-
-# Sidebar UI
 st.sidebar.image("https://firesideventures.com/cdn/shop/files/Logo_of_Rozana_2048x.png?v=1732534274", width=180)
 st.sidebar.title("📊 Rozana Automation")
 selected_tab = st.sidebar.radio("Select Task", [
@@ -34,7 +20,7 @@ selected_tab = st.sidebar.radio("Select Task", [
     "FBD Stock Report"
 ])
 
-# Optional Dark Mode
+# Optional dark mode toggle
 dark_mode = st.sidebar.toggle("🌙 Dark Mode", value=False)
 if dark_mode:
     st.markdown("""
@@ -44,16 +30,19 @@ if dark_mode:
         </style>
     """, unsafe_allow_html=True)
 
-# --- Tab 1: Order Summary Cleaner ---
+def convert_df(df):
+    return df.to_csv(index=False).encode('utf-8')
+
+# --- Tab 1: Order Summary ---
 if selected_tab == "Order Summary Cleaner":
     st.header("📦 Order Summary Cleaner")
-    os_file = st.file_uploader("📄 Upload Order_Summary (CSV or Excel)", type=["csv", "xlsx", "xls"], key="os")
-    sr_file = st.file_uploader("📄 Upload Sales_Returns (CSV or Excel)", type=["csv", "xlsx", "xls"], key="sr")
+    os_file = st.file_uploader("📄 Upload Order_Summary.csv", type="csv", key="os")
+    sr_file = st.file_uploader("📄 Upload Sales_Returns.csv", type="csv", key="sr")
 
     if os_file and sr_file and st.button("🚀 Process Order Summary"):
         with st.spinner("Cleaning order summary..."):
-            df = load_file(os_file)
-            sr = load_file(sr_file)
+            df = pd.read_csv(os_file)
+            sr = pd.read_csv(sr_file)
 
             df['WareHouse'] = df['WareHouse'].str.strip().str.lower()
             df = df[df['WareHouse'].str.contains(r'hm1|ls1', na=False)]
@@ -91,14 +80,14 @@ if selected_tab == "Order Summary Cleaner":
             st.download_button("⬇️ MTD UP Summary", convert_df(df_up), "MTD_UP_Order_Summary.csv")
             st.download_button("⬇️ MTD HR Summary", convert_df(df_hr), "MTD_HR_Order_Summary.csv")
 
-# --- Tab 2: Closing Stock Report ---
+# --- Tab 2: Closing Stock ---
 elif selected_tab == "Closing Stock Report":
     st.header("🏬 Closing Stock Report")
-    file = st.file_uploader("📄 Upload Closing Stock (CSV or Excel)", type=["csv", "xlsx", "xls"], key="csr")
+    file = st.file_uploader("📄 Upload Closing_Stock_Report.csv", type="csv", key="csr")
 
     if file and st.button("🚀 Process Closing Stock"):
         with st.spinner("Cleaning closing stock report..."):
-            df = load_file(file)
+            df = pd.read_csv(file)
             df['Warehouse'] = df['Warehouse'].str.strip().str.upper()
             df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
             df['SKU Code'] = df['SKU Code'].str.replace(r'[^A-Za-z0-9]', '', regex=True)
@@ -119,13 +108,13 @@ elif selected_tab == "Closing Stock Report":
 # --- Tab 3: LKO Z18 ---
 elif selected_tab == "LKO Z18 Report":
     st.header("📦 LKO Z18 Report")
-    ndr_stock = st.file_uploader("📄 Upload NDR_Stock Detail (CSV or Excel)", type=["csv", "xlsx", "xls"])
-    ndr_view = st.file_uploader("📄 Upload NDR_View Order (CSV or Excel)", type=["csv", "xlsx", "xls"])
+    ndr_stock = st.file_uploader("📄 Upload NDR_Stock Detail.csv", type="csv")
+    ndr_view = st.file_uploader("📄 Upload NDR_View Order.csv", type="csv")
 
     if ndr_stock and ndr_view and st.button("🚀 Process LKO Z18"):
         with st.spinner("Processing LKO Z18 report..."):
-            df = load_file(ndr_stock)
-            view_df = load_file(ndr_view)
+            df = pd.read_csv(ndr_stock)
+            view_df = pd.read_csv(ndr_view)
             df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
             excluded_categories = ["Accessories", "Apparel", "Asset", "Capex", "Clothing And Accessories", "Consumables", "Footwears", "Rajeev Colony_CxEC Lite"]
             df = df[~df['SKU Category'].isin(excluded_categories)]
@@ -152,11 +141,11 @@ elif selected_tab == "LKO Z18 Report":
 # --- Tab 4: RBL ---
 elif selected_tab == "RBL Report":
     st.header("🏭 RBL Stock Report")
-    rbl_file = st.file_uploader("📄 Upload RBL_Stock Detail (CSV or Excel)", type=["csv", "xlsx", "xls"])
+    rbl_file = st.file_uploader("📄 Upload RBL_Stock Detail.csv", type="csv")
 
     if rbl_file and st.button("🚀 Process RBL Stock"):
         with st.spinner("Processing RBL report..."):
-            df = load_file(rbl_file)
+            df = pd.read_csv(rbl_file)
             df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
             df = df[df['Zone'].str.lower() == 'storagezone18']
             excluded_categories = ["Accessories", "Apparel", "Asset", "Capex", "Clothing And Accessories", "Consumables", "Footwears", "Rajeev Colony_CxEC Lite"]
@@ -170,11 +159,11 @@ elif selected_tab == "RBL Report":
 # --- Tab 5: TEMP ---
 elif selected_tab == "TEMP Stock Summary":
     st.header("🌡 TEMP Stock Summary")
-    temp_file = st.file_uploader("📄 Upload TEMP_Stock Summary (CSV or Excel)", type=["csv", "xlsx", "xls"])
+    temp_file = st.file_uploader("📄 Upload TEMP_Stock Summary.csv", type="csv")
 
     if temp_file and st.button("🚀 Process TEMP Summary"):
         with st.spinner("Processing TEMP stock summary..."):
-            df = load_file(temp_file)
+            df = pd.read_csv(temp_file)
             df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
             excluded_categories = ["Accessories", "Apparel", "Asset", "Capex", "Clothing And Accessories", "Consumables", "Footwears", "Rajeev Colony_CxEC Lite"]
             df = df[~df['SKU Category'].isin(excluded_categories)]
@@ -190,13 +179,13 @@ elif selected_tab == "TEMP Stock Summary":
 # --- Tab 6: FBD ---
 elif selected_tab == "FBD Stock Report":
     st.header("🏢 FBD Stock Report")
-    fbd_stock = st.file_uploader("📄 Upload FBD_Stock Detail (CSV or Excel)", type=["csv", "xlsx", "xls"])
-    fbd_view = st.file_uploader("📄 Upload FBD_View Order (CSV or Excel)", type=["csv", "xlsx", "xls"])
+    fbd_stock = st.file_uploader("📄 Upload FBD_Stock Detail.csv", type="csv")
+    fbd_view = st.file_uploader("📄 Upload FBD_View Order.csv", type="csv")
 
     if fbd_stock and fbd_view and st.button("🚀 Process FBD Stock"):
         with st.spinner("Processing FBD stock report..."):
-            df = load_file(fbd_stock)
-            view_df = load_file(fbd_view)
+            df = pd.read_csv(fbd_stock)
+            view_df = pd.read_csv(fbd_view)
             df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
             excluded_categories = ["Accessories", "Apparel", "Asset", "Capex", "Clothing And Accessories", "Consumables", "Footwears", "Rajeev Colony_CxEC Lite"]
             df = df[~df['SKU Category'].isin(excluded_categories)]
