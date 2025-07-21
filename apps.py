@@ -37,8 +37,8 @@ def read_uploaded_file(uploaded_file):
 # --- Tab 1: Order Summary Cleaner ---
 if selected_tab == "Order Summary Cleaner":
     st.header("📦 Order Summary Cleaner")
-    os_file = st.file_uploader("📄 Upload Order_Summary.csv or .xlsx", type=["csv", "xlsx"])
-    sr_file = st.file_uploader("📄 Upload Sales_Returns.csv or .xlsx", type=["csv", "xlsx"])
+    os_file = st.file_uploader("📄 Upload Order_Summary.csv or .xlsx", type=["csv", "xlsx", "xls"])
+    sr_file = st.file_uploader("📄 Upload Sales_Returns.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if os_file and sr_file and st.button("🚀 Process Order Summary"):
         df = read_uploaded_file(os_file)
@@ -110,7 +110,7 @@ if selected_tab == "Order Summary Cleaner":
 # --- Tab 2: Closing Stock Report ---
 elif selected_tab == "Closing Stock Report":
     st.header("🏬 Closing Stock Report")
-    cs_file = st.file_uploader("📄 Upload Closing_Stock_Report.csv or .xlsx", type=["csv", "xlsx"])
+    cs_file = st.file_uploader("📄 Upload Closing_Stock_Report.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if cs_file and st.button("🚀 Process Closing Stock"):
         df = read_uploaded_file(cs_file)
@@ -157,8 +157,8 @@ elif selected_tab == "Closing Stock Report":
 # --- Tab 3: LKO Z18 Report ---
 elif selected_tab == "LKO Z18 Report":
     st.header("📦 LKO Z18 Report")
-    ndr_stock = st.file_uploader("📄 Upload NDR_Stock Detail.csv or .xlsx", type=["csv", "xlsx"])
-    ndr_view = st.file_uploader("📄 Upload NDR_View Order.csv or .xlsx", type=["csv", "xlsx"])
+    ndr_stock = st.file_uploader("📄 Upload NDR_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
+    ndr_view = st.file_uploader("📄 Upload NDR_View Order.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if ndr_stock and ndr_view and st.button("🚀 Process LKO Z18"):
         df = read_uploaded_file(ndr_stock)
@@ -210,7 +210,7 @@ elif selected_tab == "LKO Z18 Report":
 # --- Tab 4: RBL Report ---
 elif selected_tab == "RBL Report":
     st.header("🏢 RBL Stock Report")
-    rbl_file = st.file_uploader("📄 Upload RBL_Stock Detail.csv or .xlsx", type=["csv", "xlsx"])
+    rbl_file = st.file_uploader("📄 Upload RBL_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if rbl_file and st.button("🚀 Process RBL Stock"):
         df = read_uploaded_file(rbl_file)
@@ -244,7 +244,7 @@ elif selected_tab == "RBL Report":
 # --- Tab 5: TEMP Stock Summary ---
 elif selected_tab == "TEMP Stock Summary":
     st.header("🏷️ TEMP Stock Summary")
-    temp_file = st.file_uploader("📄 Upload TEMP_Stock Summary.csv or .xlsx", type=["csv", "xlsx"])
+    temp_file = st.file_uploader("📄 Upload TEMP_Stock Summary.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if temp_file and st.button("🚀 Process TEMP Stock"):
         df = read_uploaded_file(temp_file)
@@ -278,8 +278,8 @@ elif selected_tab == "TEMP Stock Summary":
 # --- Tab 6: FBD Stock Report ---
 elif selected_tab == "FBD Stock Report":
     st.header("🏬 FBD Stock Report")
-    fbd_stock_file = st.file_uploader("📄 Upload FBD_Stock Detail.csv or .xlsx", type=["csv", "xlsx"])
-    fbd_view_file = st.file_uploader("📄 Upload FBD_View Order.csv or .xlsx", type=["csv", "xlsx"])
+    fbd_stock_file = st.file_uploader("📄 Upload FBD_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
+    fbd_view_file = st.file_uploader("📄 Upload FBD_View Order.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if fbd_stock_file and fbd_view_file and st.button("🚀 Process FBD Stock"):
         df = read_uploaded_file(fbd_stock_file)
