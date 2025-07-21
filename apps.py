@@ -10,14 +10,14 @@ st.set_page_config(
 )
 
 st.sidebar.image("https://firesideventures.com/cdn/shop/files/Logo_of_Rozana_2048x.png?v=1732534274", width=180)
-st.sidebar.title("📊 Rozana Automation")
+st.sidebar.title("📊 Planning Team")
 selected_tab = st.sidebar.radio("Select Task", [
-    "Order Summary Cleaner",
+    "Order Summary",
     "Closing Stock Report",
-    "LKO Z18 Report",
-    "RBL Report",
-    "TEMP Stock Summary",
-    "FBD Stock Report"
+    "LKO Z18",
+    "RBL",
+    "LKO Temp",
+    "FBD"
 ])
 
 def convert_df(df):
@@ -34,9 +34,9 @@ def read_uploaded_file(uploaded_file):
         st.warning("Unsupported file type. Please upload a CSV or Excel file.")
         return None
 
-# --- Tab 1: Order Summary Cleaner ---
-if selected_tab == "Order Summary Cleaner":
-    st.header("📦 Order Summary Cleaner")
+# --- Tab 1: Order Summary ---
+if selected_tab == "Order Summary":
+    st.header("📦 Order Summary")
     os_file = st.file_uploader("📄 Upload Order_Summary.csv or .xlsx", type=["csv", "xlsx", "xls"])
     sr_file = st.file_uploader("📄 Upload Sales_Returns.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
@@ -158,9 +158,9 @@ elif selected_tab == "Closing Stock Report":
         st.download_button("⬇️ Download UP Stock", convert_df(df_up_grouped), "UP_Closing_Stock_Report.csv")
         st.download_button("⬇️ Download HR Stock", convert_df(df_hr_grouped), "HR_Closing_Stock_Report.csv")
 
-# --- Tab 3: LKO Z18 Report ---
-elif selected_tab == "LKO Z18 Report":
-    st.header("📦 LKO Z18 Report")
+# --- Tab 3: LKO Z18 ---
+elif selected_tab == "LKO Z18":
+    st.header("📦 LKO Z18")
     ndr_stock = st.file_uploader("📄 Upload NDR_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
     ndr_view = st.file_uploader("📄 Upload NDR_View Order.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
@@ -211,9 +211,9 @@ elif selected_tab == "LKO Z18 Report":
         st.success("✅ LKO Z18 stock summary cleaned!")
         st.download_button("⬇️ Download Cleaned LKO Z18", convert_df(final_df), "cleaned_ndr_stock.csv")
 
-# --- Tab 4: RBL Report ---
-elif selected_tab == "RBL Report":
-    st.header("🏢 RBL Stock Report")
+# --- Tab 4: RBL ---
+elif selected_tab == "RBL":
+    st.header("🏢 RBL Stock")
     rbl_file = st.file_uploader("📄 Upload RBL_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if rbl_file and st.button("🚀 Process RBL Stock"):
@@ -245,9 +245,9 @@ elif selected_tab == "RBL Report":
         st.success("✅ RBL stock summary cleaned!")
         st.download_button("⬇️ Download Cleaned RBL Stock", convert_df(grouped_df), "cleaned_rbl_stock.csv")
 
-# --- Tab 5: TEMP Stock Summary ---
-elif selected_tab == "TEMP Stock Summary":
-    st.header("🏷️ TEMP Stock Summary")
+# --- Tab 5: LKO Temp ---
+elif selected_tab == "LKO Temp":
+    st.header("🏷️ LKO Temp")
     temp_file = st.file_uploader("📄 Upload TEMP_Stock Summary.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
     if temp_file and st.button("🚀 Process TEMP Stock"):
@@ -276,12 +276,12 @@ elif selected_tab == "TEMP Stock Summary":
 
         final_df = df[['SKU Code', 'Product Description', 'Final Quantity', 'Final Value']]
 
-        st.success("✅ TEMP stock summary cleaned!")
-        st.download_button("⬇️ Download Cleaned TEMP Stock", convert_df(final_df), "cleaned_temp_stock.csv")
+        st.success("✅ LKO Temp cleaned!")
+        st.download_button("⬇️ Download Cleaned LKO Temp", convert_df(final_df), "cleaned_temp_stock.csv")
 
-# --- Tab 6: FBD Stock Report ---
-elif selected_tab == "FBD Stock Report":
-    st.header("🏬 FBD Stock Report")
+# --- Tab 6: FBD ---
+elif selected_tab == "FBD":
+    st.header("🏬 FBD")
     fbd_stock_file = st.file_uploader("📄 Upload FBD_Stock Detail.csv or .xlsx", type=["csv", "xlsx", "xls"])
     fbd_view_file = st.file_uploader("📄 Upload FBD_View Order.csv or .xlsx", type=["csv", "xlsx", "xls"])
 
