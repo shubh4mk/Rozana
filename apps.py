@@ -120,6 +120,13 @@ elif selected_tab == "Closing Stock Report":
         df = df[df['Warehouse'].str.contains(r'hm1|ls1', na=False)]
         df = df[~df['SKU Code'].str.upper().str.startswith(('FR', 'CAP'))]
 
+        # Remove excluded categories
+        excluded_categories = [
+            "Accessories", "Apparel", "Asset", "Capex", "Clothing And Accessories", "Consumables", "Footwears", "Rajeev Colony_CxEC Lite"
+            ]
+        df = df[~df['SKU Category'].isin(excluded_categories)]
+        print(f"After SKU Category filter: {df.shape}")
+
         excluded_zone_keywords = ['damaged_zone', 'damaged', 'DAMAGEZONE', 'expiry', 'qc_zone', 'short']
         zone_pattern = '|'.join([re.escape(z) for z in excluded_zone_keywords])
         df = df[~df['zone'].str.contains(zone_pattern, case=False, na=False)]
