@@ -120,6 +120,8 @@ elif selected_tab == "Closing Stock Report":
 
         df['Warehouse'] = df['Warehouse'].str.strip().str.lower()
         df = df[df['Warehouse'].str.contains(r'hm1|ls1', na=False)]
+        df['SKU Code'] = df['SKU Code'].str.replace(r'(?i)loose', '', regex=True)
+        df['SKU Code'] = df['SKU Code'].str.replace(r'[^A-Za-z0-9]', '', regex=True)
         df = df[~df['SKU Code'].str.upper().str.startswith(('FR', 'CAP'))]
 
         # Remove excluded categories
