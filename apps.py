@@ -131,6 +131,8 @@ elif selected_tab == "Closing Stock Report":
         df = df[~df['SKU Category'].isin(excluded_categories)]
         print(f"After SKU Category filter: {df.shape}")
 
+        df['Merge'] = df['Warehouse'].astype(str) + df['SKU Code'].astype(str)
+
         excluded_zone_keywords = ['damaged_zone', 'damaged', 'DAMAGEZONE', 'expiry', 'qc_zone', 'short']
         zone_pattern = '|'.join([re.escape(z) for z in excluded_zone_keywords])
         df = df[~df['zone'].str.contains(zone_pattern, case=False, na=False)]
@@ -142,12 +144,12 @@ elif selected_tab == "Closing Stock Report":
         df_up = df[df['Warehouse'].str.startswith('up')]
         df_hr = df[df['Warehouse'].isin(['hr007_rjv_ls1', 'hr009_pla_ls1'])]
 
-        df_up_grouped = df_up.groupby(['SKU Code'], as_index=False).agg({
+        df_up_grouped = df_up.groupby(['Merge', 'SKU Code', 'SKU Description'], as_index=False).agg({
             'Stock Quantity': 'sum',
             'Final Value': 'sum'
         })
 
-        df_hr_grouped = df_hr.groupby(['SKU Code', 'SKU Description'], as_index=False).agg({
+        df_hr_grouped = df_hr.groupby(['Merge', 'SKU Code', 'SKU Description'], as_index=False).agg({
             'Stock Quantity': 'sum',
             'Final Value': 'sum'
         })
