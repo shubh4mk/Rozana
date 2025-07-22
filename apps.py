@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import re
 from datetime import datetime
+import pyexcel as pe
 
 st.set_page_config(
     page_title="Rozana CSV Cleaner",
@@ -31,20 +32,31 @@ def read_uploaded_file(uploaded_file):
             return pd.read_csv(uploaded_file)
 
         elif filename.endswith(".xlsx"):
-            try:
-                return pd.read_excel(uploaded_file, engine='openpyxl')
-            except ImportError:
-                st.error("❌ 'openpyxl' library is missing. Please install it to read .xlsx files.")
-            except Exception as e:
-                st.error(f"❌ Error reading .xlsx file: {e}")
+            return pd.read_excel(uploaded_file, engine='openpyxl')
 
         elif filename.endswith(".xls"):
             try:
-                return pd.read_excel(uploaded_file, engine='xlrd')
-            except ImportError:
-                st.error("❌ 'xlrd' library is missing. Please install it to read .xls files.")
+                # Save the uploaded .xls to a temporary file
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".xls") as tmp_xls:
+                    tmp_xls.write(uploaded_file.getbuffer())
+                    tmp_xls_path = tmp_xls.name
+
+                # Convert to .xlsx in memory using pyexcel
+                sheet = pe.get_sheet(file_name=tmp_xls_path)
+                tmp_xlsx_path = tmp_xls_path.replace(".xls", ".xlsx")
+                sheet.save_as(tmp_xlsx_path)
+
+                df = pd.read_excel(tmp_xlsx_path, engine='openpyxl')
+
+                # Clean up temp files
+                os.remove(tmp_xls_path)
+                os.remove(tmp_xlsx_path)
+
+                return df
+
             except Exception as e:
-                st.error(f"❌ Error reading .xls file: {e}")
+                st.error(f"❌ Failed to read .xls file: {e}")
+                return None
 
         else:
             st.warning("⚠️ Unsupported file type. Please upload a .csv, .xlsx, or .xls file.")
@@ -53,7 +65,7 @@ def read_uploaded_file(uploaded_file):
     except Exception as e:
         st.error(f"❌ Unexpected error while reading file: {e}")
         return None
-
+    
 # --- Tab 1: Order Summary ---
 if selected_tab == "Order Summary":
     st.header("📦 Order Summary")

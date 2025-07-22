@@ -19,5 +19,4 @@ pydantic==2.7.0
 
 streamlit
 
-xlrd==1.2.0
 openpyxl
