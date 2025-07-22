@@ -20,3 +20,6 @@ pydantic==2.7.0
 streamlit
 
 openpyxl
+
+pyexcel
+pyexcel-xls
