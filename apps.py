@@ -26,10 +26,10 @@ def convert_df(df):
 def read_uploaded_file(uploaded_file):
     if uploaded_file.name.endswith(".csv"):
         return pd.read_csv(uploaded_file)
-    elif uploaded_file.name.endswith(".xlsx"):
-        return pd.read_excel(uploaded_file)
+    elif uploaded_file.name.endswith(".xlsx", engine='openpyxl'):
+        return pd.read_excel(uploaded_file, engine='openpyxl')
     elif uploaded_file.name.endswith(".xls"):
-        return pd.read_excel(uploaded_file)
+        return pd.read_excel(uploaded_file, engine='xlrd')
     else:
         st.warning("Unsupported file type. Please upload a CSV or Excel file.")
         return None
