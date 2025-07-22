@@ -24,14 +24,34 @@ def convert_df(df):
     return df.to_csv(index=False).encode('utf-8')
 
 def read_uploaded_file(uploaded_file):
-    if uploaded_file.name.endswith(".csv"):
-        return pd.read_csv(uploaded_file)
-    elif uploaded_file.name.endswith(".xlsx", engine='openpyxl'):
-        return pd.read_excel(uploaded_file, engine='openpyxl')
-    elif uploaded_file.name.endswith(".xls"):
-        return pd.read_excel(uploaded_file, engine='xlrd')
-    else:
-        st.warning("Unsupported file type. Please upload a CSV or Excel file.")
+    filename = uploaded_file.name.lower()
+
+    try:
+        if filename.endswith(".csv"):
+            return pd.read_csv(uploaded_file)
+
+        elif filename.endswith(".xlsx"):
+            try:
+                return pd.read_excel(uploaded_file, engine='openpyxl')
+            except ImportError:
+                st.error("❌ 'openpyxl' library is missing. Please install it to read .xlsx files.")
+            except Exception as e:
+                st.error(f"❌ Error reading .xlsx file: {e}")
+
+        elif filename.endswith(".xls"):
+            try:
+                return pd.read_excel(uploaded_file, engine='xlrd')
+            except ImportError:
+                st.error("❌ 'xlrd' library is missing. Please install it to read .xls files.")
+            except Exception as e:
+                st.error(f"❌ Error reading .xls file: {e}")
+
+        else:
+            st.warning("⚠️ Unsupported file type. Please upload a .csv, .xlsx, or .xls file.")
+            return None
+
+    except Exception as e:
+        st.error(f"❌ Unexpected error while reading file: {e}")
         return None
 
 # --- Tab 1: Order Summary ---
