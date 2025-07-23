@@ -14,8 +14,7 @@ lxml
 # Streamlit App
 streamlit
 openpyxl
-pyexcel
-pyexcel-xls
+xlrd==1.2.0
 
 # Airflow (optional if you're running DAGs)
 apache-airflow

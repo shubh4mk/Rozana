@@ -36,27 +36,12 @@ def read_uploaded_file(uploaded_file):
 
         elif filename.endswith(".xls"):
             try:
-                # Save the uploaded .xls to a temporary file
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".xls") as tmp_xls:
-                    tmp_xls.write(uploaded_file.getbuffer())
-                    tmp_xls_path = tmp_xls.name
-
-                # Convert to .xlsx in memory using pyexcel
-                sheet = pe.get_sheet(file_name=tmp_xls_path)
-                tmp_xlsx_path = tmp_xls_path.replace(".xls", ".xlsx")
-                sheet.save_as(tmp_xlsx_path)
-
-                df = pd.read_excel(tmp_xlsx_path, engine='openpyxl')
-
-                # Clean up temp files
-                os.remove(tmp_xls_path)
-                os.remove(tmp_xlsx_path)
-
-                return df
-
+                return pd.read_excel(uploaded_file, engine='xlrd')
+            except ImportError:
+                st.error("❌ 'xlrd' is missing. Please install xlrd==1.2.0 to read .xls files.")
             except Exception as e:
-                st.error(f"❌ Failed to read .xls file: {e}")
-                return None
+                st.error(f"❌ Error reading .xls file: {e}")
+            return None
 
         else:
             st.warning("⚠️ Unsupported file type. Please upload a .csv, .xlsx, or .xls file.")
