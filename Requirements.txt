@@ -14,7 +14,7 @@ lxml
 # Streamlit App
 streamlit
 openpyxl
-xlrd>=2.0.1
+xlrd
 
 # Airflow (optional if you're running DAGs)
 apache-airflow
