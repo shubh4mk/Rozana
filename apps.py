@@ -34,20 +34,14 @@ def read_uploaded_file(uploaded_file):
             return pd.read_excel(uploaded_file, engine='openpyxl')
 
         elif filename.endswith(".xls"):
-            try:
-                return pd.read_excel(uploaded_file, engine='xlrd')
-            except ImportError:
-                st.error("❌ 'xlrd' is missing. Please install xlrd==1.2.0 to read .xls files.")
-            except Exception as e:
-                st.error(f"❌ Error reading .xls file: {e}")
-            return None
+            return pd.read_excel(uploaded_file, engine='xlrd')
 
         else:
-            st.warning("⚠️ Unsupported file type. Please upload a .csv, .xlsx, or .xls file.")
+            st.warning("⚠️ Unsupported file type. Please upload a CSV or Excel file.")
             return None
 
     except Exception as e:
-        st.error(f"❌ Unexpected error while reading file: {e}")
+        st.error(f"❌ Error reading uploaded file: {e}")
         return None
     
 # --- Tab 1: Order Summary ---
